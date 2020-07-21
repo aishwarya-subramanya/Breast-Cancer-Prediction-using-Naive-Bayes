@@ -1,0 +1,253 @@
+partition <- createDataPartition(breast_cancer$diagnosis, p=0.8, list=F)
+> train <- breast_cancer[partition,]
+> test <- breast_cancer[-partition,]
+> sc_train<-as.data.frame(scale(breast_cancer[,-1]), scale=T, center=T)
+> sc_test<-as.data.frame(scale(breast_cancer[,-1]), scale=T, center=T)
+> train
+# A tibble: 456 x 31
+   diagnosis radius_mean texture_mean perimeter_mean area_mean smoothness_mean compactness_mean concavity_mean points_mean
+   <fct>           <dbl>        <dbl>          <dbl>     <dbl>           <dbl>            <dbl>          <dbl>       <dbl>
+ 1 Benign           11.0         16.8           70.9      373.          0.108            0.0780       0.0305       0.0248 
+ 2 Benign           11.3         13.4           73        385.          0.116            0.114        0.0464       0.0480 
+ 3 Benign           15.2         13.2           97.6      712.          0.0796           0.0693       0.0339       0.0266 
+ 4 Benign           11.6         19.0           74.2      410.          0.0855           0.0772       0.0548       0.0143 
+ 5 Benign           11.5         23.9           74.5      404.          0.0926           0.102        0.111        0.0411 
+ 6 Benign           10.5         19.3           67.4      336.          0.0999           0.0858       0.0300       0.0120 
+ 7 Malignant        20.6         21.2          138.      1320           0.108            0.164        0.219        0.112  
+ 8 Benign           12.2         17.9           78.3      460.          0.0865           0.0668       0.0388       0.0233 
+ 9 Benign           13.0         19.3           82.6      527.          0.0806           0.0379       0.000692     0.00417
+10 Malignant        19.6         25            128.      1191           0.103            0.0987       0.166        0.0906 
+# … with 446 more rows, and 22 more variables: symmetry_mean <dbl>, dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+#   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>, compactness_se <dbl>, concavity_se <dbl>, points_se <dbl>,
+#   symmetry_se <dbl>, dimension_se <dbl>, radius_worst <dbl>, texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>,
+#   smoothness_worst <dbl>, compactness_worst <dbl>, concavity_worst <dbl>, points_worst <dbl>, symmetry_worst <dbl>,
+#   dimension_worst <dbl>
+> #Naive Bayes method of classification
+> library(caret)
+> library(e1071)
+> model<-naiveBayes(diagnosis~.,data=train, laplace=1)
+> model$apriori
+Y
+   Benign Malignant 
+      286       170 
+> model$tables
+$radius_mean
+           radius_mean
+Y               [,1]     [,2]
+  Benign    12.26405 1.757225
+  Malignant 17.61676 3.236586
+
+$texture_mean
+           texture_mean
+Y               [,1]     [,2]
+  Benign    17.87486 3.884855
+  Malignant 21.42606 3.865224
+
+$perimeter_mean
+           perimeter_mean
+Y                [,1]     [,2]
+  Benign     78.89906 11.65903
+  Malignant 116.47635 22.11478
+
+$area_mean
+           area_mean
+Y               [,1]     [,2]
+  Benign    471.1385 133.2898
+  Malignant 995.5841 375.6098
+
+$smoothness_mean
+           smoothness_mean
+Y                 [,1]       [,2]
+  Benign    0.09303108 0.01372130
+  Malignant 0.10302176 0.01229579
+
+$compactness_mean
+           compactness_mean
+Y                 [,1]       [,2]
+  Benign    0.08214797 0.03446981
+  Malignant 0.14704671 0.05569440
+
+$concavity_mean
+           concavity_mean
+Y                [,1]       [,2]
+  Benign    0.0479559 0.04514303
+  Malignant 0.1659826 0.07853998
+
+$points_mean
+           points_mean
+Y                 [,1]       [,2]
+  Benign    0.02665387 0.01636388
+  Malignant 0.09034418 0.03553891
+
+$symmetry_mean
+           symmetry_mean
+Y                [,1]       [,2]
+  Benign    0.1747846 0.02535132
+  Malignant 0.1943429 0.02895891
+
+$dimension_mean
+           dimension_mean
+Y                 [,1]        [,2]
+  Benign    0.06292052 0.006786118
+  Malignant 0.06269418 0.007561198
+
+$radius_se
+           radius_se
+Y                [,1]      [,2]
+  Benign    0.2836605 0.1103400
+  Malignant 0.6295765 0.3646123
+
+$texture_se
+           texture_se
+Y               [,1]      [,2]
+  Benign    1.213657 0.5768142
+  Malignant 1.201913 0.4802632
+
+$perimeter_se
+           perimeter_se
+Y               [,1]      [,2]
+  Benign    2.009651 0.7531304
+  Malignant 4.484671 2.7145593
+
+$area_se
+           area_se
+Y               [,1]      [,2]
+  Benign    21.26806  8.704136
+  Malignant 75.80659 65.756402
+
+$smoothness_se
+           smoothness_se
+Y                  [,1]        [,2]
+  Benign    0.007147406 0.003108907
+  Malignant 0.006927265 0.003111967
+
+$compactness_se
+           compactness_se
+Y                 [,1]       [,2]
+  Benign    0.02220342 0.01691998
+  Malignant 0.03269052 0.01752385
+
+$concavity_se
+           concavity_se
+Y                 [,1]       [,2]
+  Benign    0.02706688 0.03491066
+  Malignant 0.04300547 0.02168599
+
+$points_se
+           points_se
+Y                 [,1]        [,2]
+  Benign    0.01015403 0.005882456
+  Malignant 0.01561852 0.005834330
+
+$symmetry_se
+           symmetry_se
+Y                 [,1]        [,2]
+  Benign    0.02061626 0.007175114
+  Malignant 0.02091835 0.010566535
+
+$dimension_se
+           dimension_se
+Y                  [,1]        [,2]
+  Benign    0.003730664 0.003093301
+  Malignant 0.004063771 0.001972056
+
+$radius_worst
+           radius_worst
+Y               [,1]     [,2]
+  Benign    13.48538 1.968019
+  Malignant 21.28247 4.340279
+
+$texture_worst
+           texture_worst
+Y               [,1]     [,2]
+  Benign    23.40206 5.351367
+  Malignant 28.87071 5.417869
+
+$perimeter_worst
+           perimeter_worst
+Y                [,1]     [,2]
+  Benign     87.85105 13.44526
+  Malignant 142.57671 29.69837
+
+$area_worst
+           area_worst
+Y                [,1]     [,2]
+  Benign     567.1524 162.6714
+  Malignant 1442.0676 613.2339
+
+$smoothness_worst
+           smoothness_worst
+Y                [,1]       [,2]
+  Benign    0.1248053 0.01973649
+  Malignant 0.1442876 0.02089694
+
+$compactness_worst
+           compactness_worst
+Y                [,1]       [,2]
+  Benign    0.1873005 0.09372391
+  Malignant 0.3741868 0.16409261
+
+$concavity_worst
+           concavity_worst
+Y                [,1]      [,2]
+  Benign    0.1714924 0.1446864
+  Malignant 0.4549181 0.1801498
+
+$points_worst
+           points_worst
+Y                 [,1]       [,2]
+  Benign    0.07648585 0.03617809
+  Malignant 0.18542006 0.04739988
+
+$symmetry_worst
+           symmetry_worst
+Y                [,1]       [,2]
+  Benign    0.2700164 0.04206997
+  Malignant 0.3244071 0.07895072
+
+$dimension_worst
+           dimension_worst
+Y                 [,1]       [,2]
+  Benign    0.07964227 0.01353226
+  Malignant 0.09069024 0.02000897
+
+confusionMatrix(pred,reference=test$diagnosis, positive="Malignant")
+Confusion Matrix and Statistics
+
+           Reference
+Prediction  Benign Malignant
+  Benign        70         5
+  Malignant      1        37
+                                         
+               Accuracy : 0.9469         
+                 95% CI : (0.888, 0.9803)
+    No Information Rate : 0.6283         
+    P-Value [Acc > NIR] : 1.866e-15      
+                                         
+                  Kappa : 0.8841         
+                                         
+ Mcnemar's Test P-Value : 0.2207         
+                                         
+            Sensitivity : 0.8810         
+            Specificity : 0.9859         
+         Pos Pred Value : 0.9737         
+         Neg Pred Value : 0.9333         
+             Prevalence : 0.3717         
+         Detection Rate : 0.3274         
+   Detection Prevalence : 0.3363         
+      Balanced Accuracy : 0.9334         
+                                         
+       'Positive' Class : Malignant      
+                                         
+> pred_prob<-predict(model, newdata = test, type="raw")
+> library(ROCR)
+
+p_test<-prediction(pred_prob[,2], test$diagnosis)
+> perf<-performance(p_test,"tpr", "fpr")
+> plot(perf)
+> performance(p_test,"auc")@y.values
+[[1]]
+[1] 0.9942991
+
+> pred<-predict(model,newdata=test)
+> confusionMatrix(pred,reference=test$diagnosis, positive="M")
